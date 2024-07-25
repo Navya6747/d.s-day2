@@ -1,0 +1,387 @@
+{\rtf1\ansi\ansicpg1252\deff0\nouicompat\deflang2057{\fonttbl{\f0\fnil\fcharset0 Calibri;}}
+{\colortbl ;\red0\green176\blue80;\red255\green0\blue0;}
+{\*\generator Riched20 10.0.22621}\viewkind4\uc1 
+\pard\sa200\sl276\slmult1\cf1\b\f0\fs32\lang9 Linked list singly:\par
+\cf0\b0\fs24 #include <stdio.h>\par
+#include <stdlib.h>\par
+struct Node \{\par
+    int data;\par
+    struct Node *next;\par
+\};\par
+struct Node* createNode(int data) \{\par
+    struct Node *newNode = (struct Node*) malloc(sizeof(struct Node));\par
+    if (newNode == NULL) \{\par
+        printf("Memory allocation failed!\\n");\par
+        return NULL;\par
+    \}\par
+    newNode->data = data;\par
+    newNode->next = NULL;\par
+    return newNode;\par
+\}\par
+void insertAtBeginning(struct Node **head, int data) \{\par
+    struct Node *newNode = createNode(data);\par
+    if (newNode == NULL) \{\par
+        return;    \}\par
+    newNode->next = *head;\par
+    *head = newNode;\par
+    printf("Inserted %d at the beginning.\\n", data);\par
+\}\par
+void insertAtEnd(struct Node **head, int data) \{\par
+    struct Node *newNode = createNode(data);\par
+    if (newNode == NULL) \{\par
+        return; \par
+    \}\par
+    if (*head == NULL) \{\par
+        *head = newNode;\par
+    \} else \{\par
+        struct Node *temp = *head;\par
+        while (temp->next != NULL) \{\par
+            temp = temp->next;\par
+        \}\par
+        temp->next = newNode;\par
+    \}\par
+    printf("Inserted %d at the end.\\n", data);\par
+\}\par
+void deleteNode(struct Node **head, int key) \{\par
+    struct Node *temp = *head;\par
+    struct Node *prev = NULL;\par
+\par
+    while (temp != NULL && temp->data != key) \{\par
+        prev = temp;\par
+        temp = temp->next;\par
+    \}\par
+\par
+    if (temp == NULL) \{\par
+        printf("Key %d not found in the list. Deletion failed.\\n", key);\par
+        return;\par
+    \}\par
+\par
+    if (prev == NULL) \{\par
+        *head = temp->next;\par
+    \} else \{\par
+        prev->next = temp->next;\par
+    \}\par
+\par
+    printf("Deleted %d from the list.\\n", key);\par
+    free(temp);\par
+\}\par
+void printList(struct Node *head) \{\par
+    struct Node *temp = head;\par
+    if (temp == NULL) \{\par
+        printf("Linked list is empty.\\n");\par
+        return;\par
+    \}\par
+    printf("Linked list: ");\par
+    while (temp != NULL) \{\par
+        printf("%d -> ", temp->data);\par
+        temp = temp->next;\par
+    \}\par
+    printf("NULL\\n");\par
+\}\par
+void freeList(struct Node **head) \{\par
+    struct Node *current = *head;\par
+    struct Node *next;\par
+\par
+    while (current != NULL) \{\par
+        next = current->next;\par
+        free(current);\par
+        current = next;\par
+    \}\par
+\par
+    *head = NULL;\par
+\}\par
+int main() \{\par
+    struct Node *head = NULL;\par
+    insertAtEnd(&head, 1);\par
+    insertAtEnd(&head, 2);\par
+    insertAtEnd(&head, 3);\par
+    insertAtBeginning(&head, 4);\par
+    printList(head);\par
+    deleteNode(&head, 3);\par
+    printList(head);\par
+    freeList(&head);\par
+\par
+    return 0;\par
+\}\par
+\b Output:\par
+\b0 inserted 1 at the end.\par
+inserted 2 at the end.\par
+inserted 3 at the end.\par
+inserted 4 at the beginning.\par
+linked list: 4->1->2->3->NULL\par
+deleted 3 from the list.\par
+linked list:4->1->2->NULL\par
+\par
+\cf2\b\fs32 Double Linked List:\par
+\cf0\b0\fs24 #include <stdio.h>\par
+#include <stdlib.h>\par
+struct Node \{\par
+    int data;\par
+    struct Node *prev;\par
+    struct Node *next;\par
+\};\par
+struct Node* createNode(int data) \{\par
+    struct Node *newNode = (struct Node*) malloc(sizeof(struct Node));\par
+    if (newNode == NULL) \{\par
+                printf("Memory allocation failed!\\n");\par
+        return NULL;\par
+    \}\par
+    newNode->data = data;\par
+    newNode->prev = NULL;\par
+    newNode->next = NULL;\par
+    return newNode;\par
+\}\par
+void insertAtBeginning(struct Node **head, int data) \{\par
+    struct Node *newNode = createNode(data);\par
+    if (newNode == NULL) \{\par
+        return; \par
+    \}\par
+    if (*head == NULL) \{\par
+        *head = newNode;\par
+    \} else \{\par
+        (*head)->prev = newNode;\par
+        newNode->next = *head;\par
+        *head = newNode;\par
+    \}\par
+    printf("Inserted %d at the beginning.\\n", data);\par
+\}\par
+void insertAtEnd(struct Node **head, int data) \{\par
+    struct Node *newNode = createNode(data);\par
+    if (newNode == NULL) \{\par
+        return; \par
+    \}\par
+    if (*head == NULL) \{\par
+        *head = newNode;\par
+    \} else \{\par
+        struct Node *temp = *head;\par
+        while (temp->next != NULL) \{\par
+            temp = temp->next;\par
+        \}\par
+        temp->next = newNode;\par
+        newNode->prev = temp;\par
+    \}\par
+    printf("Inserted %d at the end.\\n", data);\par
+\}\par
+void deleteNode(struct Node **head, int key) \{\par
+    struct Node *temp = *head;\par
+    while (temp != NULL && temp->data != key) \{\par
+        temp = temp->next;\par
+    \}\par
+\par
+    if (temp == NULL) \{\par
+        printf("Key %d not found in the list. Deletion failed.\\n", key);\par
+        return;\par
+    \}\par
+\par
+    if (temp->prev == NULL) \{\par
+        *head = temp->next;\par
+    \} else \{\par
+        temp->prev->next = temp->next;\par
+    \}\par
+\par
+    if (temp->next != NULL) \{\par
+        temp->next->prev = temp->prev;\par
+    \}\par
+\par
+    printf("Deleted %d from the list.\\n", key);\par
+    free(temp);\par
+\}\par
+void printForward(struct Node *head) \{\par
+    struct Node *temp = head;\par
+    if (temp == NULL) \{\par
+        printf("Doubly linked list is empty.\\n");\par
+        return;\par
+    \}\par
+    printf("Doubly linked list (forward): ");\par
+    while (temp != NULL) \{\par
+        printf("%d -> ", temp->data);\par
+        temp = temp->next;\par
+    \}\par
+    printf("NULL\\n");\par
+\}\par
+void printBackward(struct Node *head) \{\par
+    struct Node *temp = head;\par
+    if (temp == NULL) \{\par
+        printf("Doubly linked list is empty.\\n");\par
+        return;\par
+    \}\par
+    while (temp->next != NULL) \{\par
+        temp = temp->next;\par
+    \}\par
+    printf("Doubly linked list (backward): ");\par
+    while (temp != NULL) \{\par
+        printf("%d -> ", temp->data);\par
+        temp = temp->prev;\par
+    \}\par
+    printf("NULL\\n");\par
+\}\par
+void freeList(struct Node **head) \{\par
+    struct Node *current = *head;\par
+    struct Node *next;\par
+    while (current != NULL) \{\par
+        next = current->next;\par
+        free(current);\par
+        current = next;\par
+    \}\par
+    *head = NULL;\par
+\}\par
+int main() \{\par
+    struct Node *head = NULL;\par
+    insertAtEnd(&head, 1);\par
+    insertAtEnd(&head, 2);\par
+    insertAtEnd(&head, 3);\par
+    insertAtBeginning(&head, 4);\par
+    printForward(head);\par
+    printBackward(head);\par
+    deleteNode(&head, 3);\par
+    printForward(head);\par
+    printBackward(head);\par
+    freeList(&head);\par
+    return 0;\par
+\}\par
+\b Output:\par
+\b0 Inserted 1 at the end.\par
+Inserted 2 at the end.\par
+Inserted 3 at the end.\par
+Inserted 4 at the beginning.Inserted 3 at the end.\par
+Doubly linked list (forward): 4 -> 1 -> 2 -> 3 -> NULL\par
+Doubly linked list (backward): 3 -> 2 -> 1 -> 4 -> NULL\par
+deleted 3 from linked list.\par
+Doubly linked list (forward): 4 -> 1 -> 2 -> NULL\par
+Doubly linked list (backward): 2 -> 1 -> 4 -> NULL\par
+\par
+\b\fs32 Circular linked list:\par
+\b0\fs24 #include <stdio.h>\par
+#include <stdlib.h>\par
+struct Node \{\par
+    int data;\par
+    struct Node *next;\par
+\};\par
+struct Node* createNode(int data) \{\par
+    struct Node *newNode = (struct Node*) malloc(sizeof(struct Node));\par
+    if (newNode == NULL) \{\par
+        printf("Memory allocation failed!\\n");\par
+        return NULL;\par
+    \}\par
+    newNode->data = data;\par
+    newNode->next = NULL;\par
+    return newNode;\par
+\}\par
+void insertAtBeginning(struct Node **head, int data) \{\par
+    struct Node *newNode = createNode(data);\par
+    if (newNode == NULL) \{\par
+        return; // Exit if memory allocation failed\par
+    \}\par
+    if (*head == NULL) \{\par
+        *head = newNode;\par
+        newNode->next = *head; // Point to itself to form circular link\par
+    \} else \{\par
+        struct Node *temp = *head;\par
+        while (temp->next != *head) \{\par
+            temp = temp->next;\par
+        \}\par
+        temp->next = newNode;\par
+        newNode->next = *head;\par
+        *head = newNode;\par
+    \}\par
+    printf("Inserted %d at the beginning.\\n", data);\par
+\}\par
+void insertAtEnd(struct Node **head, int data) \{\par
+    struct Node *newNode = createNode(data);\par
+    if (newNode == NULL) \{\par
+        return; // Exit if memory allocation failed\par
+    \}\par
+    if (*head == NULL) \{\par
+        *head = newNode;\par
+        newNode->next = *head; // Point to itself to form circular link\par
+    \} else \{\par
+        struct Node *temp = *head;\par
+        while (temp->next != *head) \{\par
+            temp = temp->next;\par
+        \}\par
+        temp->next = newNode;\par
+        newNode->next = *head;\par
+    \}\par
+    printf("Inserted %d at the end.\\n", data);\par
+\}\par
+void deleteNode(struct Node **head, int key) \{\par
+    if (*head == NULL) \{\par
+        printf("Circular linked list is empty. Deletion failed.\\n");\par
+        return;\par
+    \}\par
+\par
+    struct Node *temp = *head, *prev = NULL;\par
+    while (temp->data != key) \{\par
+        if (temp->next == *head) \{\par
+            printf("Key %d not found in the list. Deletion failed.\\n", key);\par
+            return;\par
+        \}\par
+        prev = temp;\par
+        temp = temp->next;\par
+    \}\par
+    if (temp->next == *head && prev == NULL) \{\par
+        *head = NULL;\par
+    \} else if (temp == *head) \{ // If the node to be deleted is the head node\par
+        prev = *head;\par
+        while (prev->next != *head) \{\par
+            prev = prev->next;\par
+        \}\par
+        *head = (*head)->next;\par
+        prev->next = *head;\par
+    \} else if (temp->next == *head) \{ // If the node to be deleted is the last node\par
+        prev->next = *head;\par
+    \} else \{ // If the node to be deleted is in between\par
+        prev->next = temp->next;\par
+    \}\par
+    free(temp);\par
+    printf("Deleted %d from the list.\\n", key);\par
+\}\par
+void printList(struct Node *head) \{\par
+    struct Node *temp = head;\par
+    if (temp == NULL) \{\par
+        printf("Circular linked list is empty.\\n");\par
+        return;\par
+    \}\par
+    printf("Circular linked list: ");\par
+    do \{\par
+        printf("%d -> ", temp->data);\par
+        temp = temp->next;\par
+    \} while (temp != head);\par
+    printf("(back to the beginning)\\n");\par
+\}\par
+void freeList(struct Node **head) \{\par
+    if (*head == NULL) \{\par
+        return;\par
+    \}\par
+    struct Node *current = *head;\par
+    struct Node *temp;\par
+\par
+    do \{\par
+        temp = current;\par
+        current = current->next;\par
+        free(temp);\par
+    \} while (current != *head);\par
+    *head = NULL;\par
+\}\par
+int main() \{\par
+    struct Node *head = NULL;\par
+    insertAtEnd(&head, 1);\par
+    insertAtEnd(&head, 2);\par
+    insertAtEnd(&head, 3);\par
+    insertAtBeginning(&head, 4);\par
+    printList(head);\par
+    deleteNode(&head, 3);\par
+    printList(head);\par
+    freeList(&head);\par
+    return 0;\par
+\}\par
+\b Output:\par
+\b0 Inserted 1 at the end.\par
+Inserted 2 at the end.\par
+Inserted 3 at the end.\par
+Inserted 4 at the beginning.\par
+Circular linked list: 4 -> 1 -> 2 -> 3 -> (back to the beginning)\par
+Deleted 3 from the list.\par
+Circular linked list: 4 -> 1 -> 2 -> (back to the beginning)\par
+}
+ 
